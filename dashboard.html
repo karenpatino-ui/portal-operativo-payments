@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Operativo Payments · Alegra</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html { scroll-behavior:smooth; }
+  body { font-family: Inter, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  .tab-btn.active { background:#0f172a; color:#fff; }
+  .tab-btn.active svg { color:#34d399; }
+  .panel { display:none; }
+  .panel.active { display:block; animation: fade .25s ease; }
+  @keyframes fade { from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+  .chips{ transition: all .12s ease; }
+  .chips:active{ transform:scale(.96); }
+  .card-news { transition: all .15s ease; }
+  .card-news:hover { box-shadow: 0 10px 30px -12px rgba(15,23,42,.25); transform: translateY(-2px); }
+</style>
+</head>
+<body class="min-h-screen bg-slate-100">
+
+<!-- ======================= CABECERA ======================= -->
+<header class="bg-gradient-to-br from-slate-900 via-[#0b1f2e] to-emerald-950 text-white shadow-xl">
+  <div class="max-w-[1400px] mx-auto px-6 py-5 flex items-center justify-between flex-wrap gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 text-white grid place-items-center text-2xl font-black shadow-lg shadow-emerald-900/40">
+        ⚡
+      </div>
+      <div>
+        <h1 class="text-xl font-extrabold tracking-tight">Portal Operativo <span class="text-emerald-300">Payments</span></h1>
+        <p class="text-xs text-emerald-100/60 font-medium">Alegra · Equipo de Pagos</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="btnPublicarNovedad" onclick="abrirModalNovedad()" class="chips bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow-lg shadow-emerald-900/40 flex items-center gap-2">
+        + Publicar Novedad
+      </button>
+    </div>
+  </div>
+
+  <!-- Pestañas -->
+  <nav class="max-w-[1400px] mx-auto px-6 pb-3 pt-1 flex gap-1.5 overflow-x-auto">
+    <button class="tab-btn active flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-lg bg-slate-800/60 text-slate-200 font-medium whitespace-nowrap" data-tab="novedades">
+      <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M13 16h-1v-4h-1m1-4h.01M12 21a9 9 0 100-18 9 9 0 000 18z"/></svg>
+      Novedades
+    </button>
+    <button class="tab-btn flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-lg hover:bg-slate-800/60 text-slate-300 font-medium whitespace-nowrap" data-tab="almuerzos">
+      <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 6v6m0 0 1 1m-1-1-1 1m5-8a5 5 0 10-8 4V6"/></svg>
+      Almuerzos
+    </button>
+    <button class="tab-btn flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-lg hover:bg-slate-800/60 text-slate-300 font-medium whitespace-nowrap" data-tab="vacaciones">
+      <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M21 13.2A7.5 7.5 0 0111 3a7.5 7.5 0 1010 10.2z"/></svg>
+      Vacaciones & Bienestar
+    </button>
+    <button class="tab-btn flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-lg hover:bg-slate-800/60 text-slate-300 font-medium whitespace-nowrap" data-tab="festivos">
+      <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      Sábados & Festivos
+    </button>
+    <button class="tab-btn flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-lg hover:bg-slate-800/60 text-slate-300 font-medium whitespace-nowrap" data-tab="formacion">
+      <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 14l9-5-9-5-9 5 9 5zM12 14v6m-7-3.5V14"/></svg>
+      Horas de Formación
+    </button>
+    <button class="tab-btn flex items-center gap-1.5 text-sm px-3.5 py-2 rounded-lg hover:bg-slate-800/60 text-slate-300 font-medium whitespace-nowrap" data-tab="cronograma">
+      <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 5h16M4 12h16M4 19h16"/></svg>
+      Cronograma
+    </button>
+  </nav>
+</header>
+
+<main class="max-w-[1400px] mx-auto px-6 py-6">
+
+  <!-- ======================= NOVEDADES ======================= -->
+  <section id="panel-novedades" class="panel active">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-5">
+      <div>
+        <h2 class="text-lg font-bold text-slate-800">Novedades del Equipo</h2>
+        <p class="text-sm text-slate-500">Actualizaciones y novedades recientes del equipo</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <input id="buscarNovedad" oninput="renderNovedades()" type="search" placeholder="Buscar novedad, versión, tema…" class="w-64 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        <select id="filtroFecha" onchange="renderNovedades()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+          <option value="">Todas las fechas</option>
+        </select>
+        <select id="filtroCanal" onchange="renderNovedades()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+          <option value="">Todos los canales</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="gridNovedades"></div>
+    <div id="sinResultados" class="hidden text-center py-12 text-slate-400">No hay novedades para este filtro.</div>
+  </section>
+
+  <!-- Placeholders (se construyen en siguientes pasos) -->
+  <!-- ======================= ALMUERZOS ======================= -->
+  <section id="panel-almuerzos" class="panel">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-5">
+      <div>
+        <h2 class="text-lg font-bold text-slate-800">Almuerzos del Equipo</h2>
+        <p class="text-sm text-slate-500">Rotación automática · bloques de 1 h 30 m · novedades preservadas</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border border-slate-300 rounded-lg px-2 py-1">
+          <button onclick="navegarDia(-1)" class="px-2 py-1 text-slate-500 hover:text-emerald-600 font-bold text-lg leading-none">&lt;</button>
+          <span id="lblDia" class="px-3 py-1 text-sm font-bold text-slate-700 min-w-[150px] text-center"></span>
+          <button onclick="navegarDia(1)" class="px-2 py-1 text-slate-500 hover:text-emerald-600 font-bold text-lg leading-none">&gt;</button>
+        </div>
+      </div>
+    </div>
+    <div id="wrapAlmuerzos" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="overflow-x-auto"><table id="tablaAlmuerzos" class="w-full text-sm border-collapse"></table></div>
+      <div id="avisoAlmuerzos" class="hidden p-8 text-center text-slate-400">Selecciona un día para ver y planear los almuerzos.</div>
+    </div>
+  </section>
+  <section id="panel-vacaciones" class="panel">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-5">
+      <div>
+        <h2 class="text-lg font-bold text-slate-800">Vacaciones & Bienestar</h2>
+        <p class="text-sm text-slate-500">Seguimiento de vacaciones y días de bienestar del equipo</p>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-xs text-slate-400">Semestre: </span>
+        <select id="filtroSemestre" onchange="renderVacaciones()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+          <option value="todos">Todos</option>
+          <option value="1">Semestre 1 · 2026</option>
+          <option value="2">Semestre 2 · 2026</option>
+        </select>
+        <button id="btnVacaciones" onclick="abrirModalV('vac', -1)" class="chips bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow shadow-emerald-900/20">+ Vacaciones</button>
+        <button id="btnBienestar" onclick="abrirModalV('bien', -1)" class="chips bg-amber-500 hover:bg-amber-400 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow shadow-amber-900/20">+ Bienestar</button>
+      </div>
+    </div>
+    <div id="subTabsVac" class="flex items-center gap-2 mb-4">
+      <button id="subVac" onclick="subVac('vac')" class="chips px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-500 text-white shadow">🌴 Vacaciones</button>
+      <button id="subBien" onclick="subVac('bien')" class="chips px-5 py-2 rounded-xl text-sm font-semibold bg-white border border-slate-300 text-slate-600 hover:bg-slate-50">☀️ Día de Bienestar</button>
+    </div>
+    <div id="wrapVacaciones" class="space-y-4"></div>
+  </section>
+  <section id="panel-festivos" class="panel">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-5">
+      <div>
+        <h2 class="text-lg font-bold text-slate-800">Sábados & Festivos</h2>
+        <p class="text-sm text-slate-500">Cobertura del equipo para sábados y festivos</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 bg-white border border-slate-300 rounded-lg px-2 py-1">
+          <button onclick="navegarFestMes(-1)" class="px-2 py-1 text-slate-500 hover:text-emerald-600 font-bold text-lg leading-none">&lt;</button>
+          <select id="filtroMesFest" onchange="cambiarMesFest(this.value)" class="px-3 py-1 text-sm font-bold text-slate-700 bg-white min-w-[150px] text-center focus:outline-none cursor-pointer">
+            <option value="todos">Todo el año</option>
+          </select>
+          <button onclick="navegarFestMes(1)" class="px-2 py-1 text-slate-500 hover:text-emerald-600 font-bold text-lg leading-none">&gt;</button>
+        </div>
+      </div>
+    </div>
+    <div id="wrapFestivos" class="space-y-4"></div>
+  </section>
+  <section id="panel-formacion" class="panel"><div class="flex items-center justify-between flex-wrap gap-3 mb-5">
+      <div>
+        <h2 class="text-lg font-bold text-slate-800">Horas de Formación</h2>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <select id="filtroMesForm" class="text-xs font-semibold px-3 py-1.5 rounded-full border border-sky-200 text-sky-700 bg-white cursor-pointer"></select>
+        <div id="leyendaForm" class="flex items-center gap-1.5 flex-wrap"></div>
+        <div class="flex items-center gap-1.5">
+          <input type="file" id="importFormArchivo" accept="application/json,.json" class="hidden">
+          <button onclick="importarFormacion()" class="text-[11px] font-semibold px-2.5 py-1 rounded-full border border-sky-200 text-sky-600 bg-white hover:bg-sky-50">Importar</button>
+          <button onclick="exportarFormacion()" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-sky-600 text-white hover:bg-sky-700">Exportar</button>
+        </div>
+      </div>
+    </div>
+    <div id="wrapFormacion" class="space-y-4"></div>
+    <p id="guardadoFormMensaje" class="hidden mt-2 text-xs font-semibold text-sky-600"></p>
+  </section>
+  <section id="panel-cronograma" class="panel"><div class="flex items-center justify-between flex-wrap gap-3 mb-5">
+      <div>
+        <h2 class="text-lg font-bold text-slate-800">Cronograma</h2>
+        <p class="text-sm text-slate-500">Turnos por agente y día · agosto 2026</p>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-xs text-slate-400">Semana:</span>
+        <select id="filtroSemanaCrono" onchange="renderCronograma()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400">
+          <option value="1">Semana 1 · 03–07 ago</option>
+          <option value="2">Semana 2 · 10–14 ago</option>
+          <option value="3">Semana 3 · 17–21 ago</option>
+          <option value="4">Semana 4 · 24–28 ago</option>
+          <option value="5">31 ago</option>
+          <option value="0">Todas</option>
+        </select>
+        <span class="text-xs text-slate-400">Canal =</span>
+        <span class="text-xs font-semibold px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200">Phone</span>
+        <span class="text-xs font-semibold px-2 py-0.5 rounded-full border bg-sky-50 text-sky-700 border-sky-200">Chat</span>
+        <span class="text-xs font-semibold px-2 py-0.5 rounded-full border bg-violet-50 text-violet-700 border-violet-200">PP</span>
+        <span class="text-xs font-semibold px-2 py-0.5 rounded-full border bg-slate-100 text-slate-500 border-slate-200">VAC / Día C</span>
+      </div>
+    </div>
+    <div id="wrapCronograma" class="space-y-4"></div>
+    <p id="guardadoCronoMensaje" class="hidden mt-2 text-xs font-semibold text-indigo-600"></p>
+  </section>
+</main>
+
+<!-- ======================= MODAL NOVEDAD ======================= -->
+<div id="modal-novedad" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+    <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-4 flex justify-between items-center">
+      <h3 class="font-bold text-lg">Publicar Novedad</h3>
+      <button onclick="cerrarModal('modal-novedad')" class="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <form id="formNovedad" class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Tema / Producto</label>
+        <input id="nuevaProducto" type="text" placeholder="Ej: Factura Alegra — Todas las versiones" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">¿Qué ocurrió?</label>
+        <textarea id="nuevaQue" rows="4" placeholder="Describe la novedad…" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Canal</label>
+        <input id="nuevaCanal" type="text" placeholder="Ej: tt-ce-news" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Fecha</label>
+        <input id="nuevaFecha" type="text" placeholder="dd/mm/aaaa" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Hilo de la comunicación</label>
+        <input id="nuevaHilo" type="url" placeholder="https://chat.google.com/…" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Vídeo</label>
+        <input id="nuevaVideo" type="url" placeholder="https://docs.google.com/videos/…" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="cerrarModal('modal-novedad')" class="px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancelar</button>
+        <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold shadow">Publicar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======================= MODAL NOVEDAD (DETALLE) ======================= -->
+<div id="modal-novedad-detalle" onclick="if(event.target===this)cerrarModal('modal-novedad-detalle')" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+    <div class="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-6 py-4 flex justify-between items-center shrink-0">
+      <h3 id="tituloModalNovedad" class="font-bold text-lg">Novedad</h3>
+      <button onclick="cerrarModal('modal-novedad-detalle')" class="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <div id="cuerpoModalNovedad" class="p-6 overflow-y-auto"></div>
+  </div>
+</div>
+
+<!-- ======================= MODAL FESTIVO ======================= -->
+<div id="modal-festivo" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-6 py-4 flex justify-between items-center">
+      <h3 id="tituloModalFestivo" class="font-bold text-lg">Editar Sábado/Festivo</h3>
+      <button onclick="cerrarModal('modal-festivo')" class="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <form id="formFestivo" class="p-6 space-y-3">
+      <input type="hidden" id="festIdx">
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Tipo</label>
+          <select id="fest_tipo" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+            <option value="Sábado">Sábado</option>
+            <option value="Festivo">Festivo</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Fecha</label>
+          <input id="fest_fecha" type="text" placeholder="dd/mm/aaaa" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Día de la semana</label>
+        <select id="fest_dia" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+          <option>Sábado</option><option>Domingo</option><option>Lunes</option>
+          <option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Agente(s) que cubren</label>
+        <div id="fest_agentes_box" class="grid grid-cols-2 gap-1.5 max-h-40 overflow-auto"></div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Observaciones</label>
+        <input id="fest_obs" type="text" placeholder="Opcional" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="cerrarModal('modal-festivo')" class="px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancelar</button>
+        <button type="submit" class="px-5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold shadow">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======================= MODAL FORMACIÓN ======================= -->
+<div id="modal-formacion" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4" onclick="if(event.target===this)cerrarModal('modal-formacion')">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg flex flex-col max-h-[85vh] overflow-hidden">
+    <div class="bg-gradient-to-r from-sky-500 to-sky-700 text-white px-6 py-4 flex justify-between items-center">
+      <h3 id="tituloModalFormacion" class="font-bold text-lg">Editar formación</h3>
+      <button onclick="cerrarModal('modal-formacion')" class="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <div class="overflow-y-auto p-6">
+      <form id="formFormacion" class="space-y-3">
+        <input type="hidden" id="formSemanaIdx">
+        <div id="cuerpoModalFormacion" class="space-y-2.5"></div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="cerrarModal('modal-formacion')" class="px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancelar</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold shadow">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= MODAL VACACIONES / BIENESTAR ======================= -->
+<div id="modal-vac" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-4 flex justify-between items-center">
+      <h3 id="tituloModalVac" class="font-bold text-lg">Agregar</h3>
+      <button onclick="cerrarModal('modal-vac')" class="text-white/80 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <form id="formVac" class="p-6 space-y-3">
+      <input type="hidden" id="vacTipo">
+      <input type="hidden" id="vacIdx">
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Agente</label>
+        <input id="vac_agente" type="text" list="listaAgentes" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <datalist id="listaAgentes"></datalist>
+      </div>
+      <div id="campo_estado">
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Estado</label>
+        <select id="vac_estado" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+          <option>Disfrutadas</option><option>Aprobadas</option><option>Solicitadas</option>
+        </select>
+      </div>
+      <div id="campo_mes">
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Mes de vacaciones</label>
+        <input id="vac_mes" type="text" placeholder="Ej. Ago" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div id="campo_fechas" class="grid grid-cols-3 gap-2">
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">Inicio</label><input id="vac_inicio" type="text" placeholder="dd/mm/aaaa" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">Fin</label><input id="vac_fin" type="text" placeholder="dd/mm/aaaa" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">Regreso</label><input id="vac_reg" type="text" placeholder="dd/mm/aaaa" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></div>
+      </div>
+      <div id="campo_dias">
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Días hábiles</label>
+        <input id="vac_dias" type="number" min="0" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div id="campo_bien_fecha">
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Fecha del Día de Bienestar</label>
+        <input id="vac_bien_fecha" type="text" placeholder="dd/mm/aaaa" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div id="campo_sem">
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Semestre</label>
+        <select id="vac_sem" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+          <option value="1">Semestre 1 · 2026</option>
+          <option value="2">Semestre 2 · 2026</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="cerrarModal('modal-vac')" class="px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-600 hover:bg-slate-50">Cancelar</button>
+        <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold shadow">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+/* ---------- Utilidades ---------- */
+function $(id){ return document.getElementById(id); }
+
+function parseCSV(texto){
+  var filas = [], actual = [], campo = '', dentro = false;
+  for (var i = 0; i < texto.length; i++) {
+    var c = texto[i];
+    if (c === '"') {
+      if (dentro && texto[i+1] === '"') { campo += '"'; i++; }
+      else dentro = !dentro;
+    } else if (c === ',' && !dentro) { actual.push(campo); campo = ''; }
+    else if ((c === '\n' || c === '\r') && !dentro) {
+      if (c === '\r' && texto[i+1] === '\n') i++;
+      actual.push(campo); campo = '';
+      filas.push(actual); actual = [];
+    } else campo += c;
+  }
+  actual.push(campo); filas.push(actual);
+  return filas.filter(function(f){ return f.some(function(x){ return (x||'').trim() !== ''; }); });
+}
+
+function normFecha(f){
+  if (!f) return null;
+  var m = String(f).trim().match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+  if (!m) return null;
+  var d = m[1], mo = m[2], y = m[3].length === 2 ? '20' + m[3] : m[3];
+  return y + '-' + (mo.length===1?'0'+mo:mo) + '-' + (d.length===1?'0'+d:d);
+}
+
+/* ---------- Cargar Novedades (Siempre al Día) ---------- */
+var novedades = [];
+function cargarSiempre(){
+  var filas = parseCSV(window.EMBED_SIEMPRE || '');
+  novedades = [];
+  for (var i = 1; i < filas.length; i++) {
+    var f = filas[i];
+    var fecha = normFecha(f[0]);
+    if (!fecha) continue;
+    novedades.push({
+      fecha: fecha, producto: (f[1]||'').trim(), que: (f[2]||'').trim(),
+      canal: (f[3]||'').trim(), hilo: (f[4]||'').trim(), video: (f[5]||'').trim()
+    });
+  }
+  novedades.sort(function(a,b){ return a.fecha < b.fecha ? 1 : -1; });
+}
+
+function mesNombre(iso){
+  var m = iso.substring(5,7);
+  return ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][parseInt(m,10)-1] + ' ' + iso.substring(0,4);
+}
+
+var fechaSeleccionada = '';
+
+function renderFiltroFechas(){
+  var meses = {};
+  novedades.forEach(function(n){
+    var k = n.fecha.substring(0,7);
+    if (!meses[k]) meses[k] = 0;
+    meses[k]++;
+  });
+  var keys = Object.keys(meses).sort().reverse();
+  var sel = $('filtroFecha');
+  var actual = sel.value;
+  sel.innerHTML = '<option value="">Todas las fechas</option>';
+  keys.forEach(function(k){
+    var o = document.createElement('option');
+    o.value = k;
+    o.textContent = mesNombre(k) + ' (' + meses[k] + ')';
+    sel.appendChild(o);
+  });
+  if (actual) sel.value = actual;
+}
+
+function renderFiltroCanales(){
+  var canales = {};
+  novedades.forEach(function(n){ if (n.canal) canales[n.canal] = true; });
+  var sel = $('filtroCanal');
+  var actual = sel.value;
+  Object.keys(canales).sort().forEach(function(c){
+    var o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    sel.appendChild(o);
+  });
+  if (actual) sel.value = actual;
+}
+
+function canalColor(c){
+  var map = { 'tt-ce-news':'emerald', 'tm-alegra':'indigo', 'sh-conversion':'amber', 'cc-conversion':'rose' };
+  var base = map[c] || 'slate';
+  var col = { emerald:'text-emerald-700 bg-emerald-50 border-emerald-200', indigo:'text-indigo-700 bg-indigo-50 border-indigo-200',
+    amber:'text-amber-700 bg-amber-50 border-amber-200', rose:'text-rose-700 bg-rose-50 border-rose-200',
+    slate:'text-slate-600 bg-slate-100 border-slate-200' }[base];
+  return col;
+}
+
+function renderNovedades(){
+  var q = ($('buscarNovedad').value || '').toLowerCase();
+  var canal = $('filtroCanal').value;
+  var mes = $('filtroFecha').value;
+  var list = novedades.filter(function(n){
+    if (mes && n.fecha.substring(0,7) !== mes) return false;
+    if (canal && n.canal !== canal) return false;
+    if (q && ((n.producto||'').toLowerCase()+' '+(n.que||'').toLowerCase()+' '+(n.canal||'').toLowerCase()).indexOf(q) === -1) return false;
+    return true;
+  });
+  var grid = $('gridNovedades');
+  grid.innerHTML = '';
+  $('sinResultados').classList.toggle('hidden', list.length > 0);
+  var cont = document.createElement('div');
+  cont.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3';
+  grid.appendChild(cont);
+  list.forEach(function(n){ cont.appendChild(tarjetaNovedad(n)); });
+}
+
+function tarjetaNovedad(n){
+  var card = document.createElement('div');
+  card.className = 'card-news bg-white rounded-2xl shadow-sm border border-slate-200 p-4 flex flex-col gap-2';
+  var links = '';
+  if (n.hilo) links += '<a href="'+n.hilo+'" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">💬 Chat</a>';
+  if (n.video) links += '<a href="'+n.video+'" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">🎥 Vídeo</a>';
+  var canal = n.canal ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border '+canalColor(n.canal)+' ml-auto shrink-0">'+n.canal+'</span>' : '';
+  card.innerHTML =
+      '<div class="flex items-start gap-2">' +
+        '<h4 class="font-bold text-slate-800 text-sm leading-snug flex-1 min-w-0">'+n.producto+'</h4>' + canal +
+      '</div>' +
+      '<p class="text-clam text-sm text-slate-600 leading-relaxed whitespace-pre-line" style="display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;">'+n.que+'</p>' +
+      '<button type="button" class="ver-mas hidden text-xs font-semibold text-emerald-600 hover:text-emerald-700 self-start">Ver más</button>' +
+      '<div class="flex gap-2 pt-1">'+links+'</div>';
+  var txt = card.querySelector('.text-clam');
+  var btn = card.querySelector('.ver-mas');
+  var clamp = true, expandido = false;
+  function toggle(){
+    clamp = !clamp;
+    if (clamp) { txt.style.webkitLineClamp = '4'; txt.style.overflow = 'hidden'; btn.textContent = 'Ver más'; }
+    else { txt.style.webkitLineClamp = 'unset'; txt.style.overflow = 'visible'; btn.textContent = 'Ver menos'; }
+  }
+  if (txt.scrollHeight > txt.clientHeight + 4) btn.classList.remove('hidden');
+  btn.onclick = toggle;
+  card.onclick = function(ev){ if (ev.target.closest('a,button')) return; verNovedad(n); };
+  card.style.cursor = 'pointer';
+  return card;
+}
+
+function verNovedad(n){
+  var links = '';
+  if (n.hilo) links += '<a href="'+n.hilo+'" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">💬 Chat</a>';
+  if (n.video) links += '<a href="'+n.video+'" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">🎥 Vídeo</a>';
+  var canal = n.canal ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border '+canalColor(n.canal)+'">'+n.canal+'</span>' : '';
+  $('tituloModalNovedad').textContent = n.producto || 'Novedad';
+  $('cuerpoModalNovedad').innerHTML =
+      '<div class="flex items-center gap-2 mb-4">' + canal +
+        '<span class="text-xs text-slate-400 font-semibold">'+n.fecha.split('-').reverse().join('/')+'</span>' +
+      '</div>' +
+      '<p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">'+n.que+'</p>' +
+      (links ? '<div class="flex gap-2 mt-5">'+links+'</div>' : '');
+  abrirModal('modal-novedad-detalle');
+}
+
+/* ---------- Pestañas ---------- */
+function activarTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(function(x){ x.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelector('.tab-btn[data-tab="'+tab+'"]').classList.add('active');
+  $('panel-' + tab).classList.add('active');
+  $('btnPublicarNovedad').style.display = tab === 'novedades' ? '' : 'none';
+}
+document.querySelectorAll('.tab-btn').forEach(function(b){
+  b.onclick = function(){ activarTab(b.dataset.tab); };
+});
+activarTab('novedades');
+
+/* ---------- Modales ---------- */
+function abrirModal(id){ var m = $(id); m.classList.remove('hidden'); m.classList.add('flex'); }
+function cerrarModal(id){ var m = $(id); m.classList.add('hidden'); m.classList.remove('flex'); }
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') cerrarModal('modal-novedad-detalle');
+});
+function abrirModalNovedad(){ abrirModal('modal-novedad'); }
+
+$('formNovedad').onsubmit = function(e){
+  e.preventDefault();
+  var n = {
+    fecha: normFecha($('nuevaFecha').value) || new Date().toISOString().substring(0,10),
+    producto: $('nuevaProducto').value.trim(),
+    que: $('nuevaQue').value.trim(),
+    canal: $('nuevaCanal').value.trim(),
+    hilo: $('nuevaHilo').value.trim(),
+    video: $('nuevaVideo').value.trim()
+  };
+  if (!n.producto || !n.que) { alert('Completa el tema y la descripción.'); return; }
+  novedades.unshift(n);
+  this.reset();
+  cerrarModal('modal-novedad');
+  renderFiltroFechas(); renderFiltroCanales(); renderNovedades();
+};
+
+/* ---------- Almuerzos ---------- */
+var rosterAlmuerzo = [];        // agentes base: {nombre, canal, novedad}
+var diasAlmuerzo = [];          // bloques por fecha cargados de la hoja
+var diaActual = null;           // Date que se muestra
+
+var BLOCOS_ALMUERZO = ['11:00 - 12:30','12:30 - 14:00','14:00 - 15:30','15:30 - 17:00'];
+var CANALES = ['Phone','Chat','PP'];
+
+/* Parsear la hoja: separa en bloques por fecha ('plantilla' si no hay). */
+function parseAlmuerzos(){
+  var filas = parseCSV(window.EMBED_ALMUERZOS || '');
+  var bloques = [], bloqueActual = null, fechaPendiente = null;
+  filas.forEach(function(f){
+    var a = (f[0]||'').trim();
+    var b = (f[1]||'').trim();
+    if (a === '#') {
+      if (fechaPendiente) { bloqueActual = { fecha: fechaPendiente, agentes: [] }; bloques.push(bloqueActual); fechaPendiente = null; }
+      else if (!bloqueActual) { bloqueActual = { fecha: 'plantilla', agentes: [] }; bloques.push(bloqueActual); }
+      else { bloqueActual = null; }
+      return;
+    }
+    if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(b) && !a) { fechaPendiente = b; return; }
+    if (/^\d+$/.test(a) && b) {
+      if ((fechaPendiente || bloqueActual)) {
+        var ag = { nombre: b, canal: (f[2]||'').trim(), novedad: (f[3]||'').trim() };
+        if (fechaPendiente) {
+          bloqueActual = { fecha: fechaPendiente, agentes: [ag] };
+          bloques.push(bloqueActual);
+          fechaPendiente = null;
+        } else if (bloqueActual) {
+          bloqueActual.agentes.push(ag);
+        }
+      }
+    }
+  });
+  return bloques;
+}
+
+/* Usa la plantilla como roster base (los 9 del equipo). Si no, el primer bloque. */
+function obtenerRoster(){
+  if (rosterAlmuerzo.length) return rosterAlmuerzo;
+  var pi = null;
+  for (var i=0;i<diasAlmuerzo.length;i++){ if (diasAlmuerzo[i].fecha==='plantilla'){ pi=i; break; } }
+  var base = pi!==null ? diasAlmuerzo[pi] : diasAlmuerzo[0];
+  if (base) rosterAlmuerzo = base.agentes.map(function(a){ return { nombre:a.nombre, canal:a.canal, novedad:a.novedad }; });
+  return rosterAlmuerzo;
+}
+
+function pad2(n){ return (n<10?'0':'')+n; }
+function fechaKey(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+
+function fmtDiaLargo(d){
+  var meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var di=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  return di[d.getDay()]+' '+d.getDate()+' de '+meses[d.getMonth()]+' de '+d.getFullYear();
+}
+
+function cargarGuardado(){ try { return JSON.parse(localStorage.getItem('almuerzosPortal')) || {}; } catch(e){ return {}; } }
+function guardarGuardado(o){ localStorage.setItem('almuerzosPortal', JSON.stringify(o)); }
+
+/* Rotación automática: el equipo se desplaza un bloque cada día. */
+var REF_INDEX = new Date(2016,7,6); // referencia solo para el día índice
+function diaIndex(d){ return Math.round((d - REF_INDEX) / 86400000); }
+function bloqueRotado(i, dia){
+  var n = BLOCOS_ALMUERZO.length;
+  return ((i % n) + (dia % n) + n) % n;
+}
+
+function navegarDia(dir){
+  do {
+    diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), diaActual.getDate()+dir);
+  } while (diaActual.getDay() === 0 || diaActual.getDay() === 6);
+  renderAlmuerzos();
+}
+
+function renderAlmuerzos(){
+  if (!diaActual) return;
+  $('lblDia').textContent = fmtDiaLargo(diaActual);
+  var key = fechaKey(diaActual);
+  var g = (cargarGuardado()[key]) || {};
+  var roster = obtenerRoster();
+  var dia = diaIndex(diaActual);
+  var thead = '<thead><tr class="bg-slate-50">' +
+    '<th class="px-3 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 w-8"> </th>' +
+    '<th class="px-3 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 min-w-[170px]">Agente</th>' +
+    '<th class="px-3 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 w-28">Canal</th>' +
+    '<th class="px-3 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 min-w-[180px]">Hora de almuerzo (1 h 30 m)</th>' +
+    '<th class="px-3 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 min-w-[220px]">Novedades / Observaciones</th>' +
+    '</tr></thead>';
+  var tbody = '<tbody>';
+  var conteo = {};
+  BLOCOS_ALMUERZO.forEach(function(_,i){ conteo[i]=0; });
+  roster.forEach(function(ag, i){
+    var canal = (g[ag.nombre] && g[ag.nombre].canal) || ag.canal;
+    var nov = (g[ag.nombre] && g[ag.nombre].novedad) || ag.novedad || '';
+    var bloque = (g[ag.nombre] && g[ag.nombre].bloque !== undefined) ? g[ag.nombre].bloque : bloqueRotado(i, dia);
+    conteo[bloque] = (conteo[bloque]||0)+1;
+    tbody += '<tr class="border-b border-slate-100 hover:bg-slate-50">' +
+      '<td class="px-3 py-1.5 text-xs font-semibold text-slate-400">'+(i+1)+'</td>' +
+      '<td class="px-3 py-1.5 text-sm font-semibold text-slate-700">'+ag.nombre+'</td>' +
+      '<td class="px-3 py-1.5"><select data-rop="canal" class="w-24 border border-slate-300 rounded-md px-1.5 py-1 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">' +
+        CANALES.map(function(c){ return '<option value="'+c+'"'+(canal===c?' selected':'')+'>'+c+'</option>'; }).join('') + '</select></td>' +
+      '<td class="px-3 py-1.5"><select data-rop="bloque" class="w-full border border-slate-300 rounded-md px-1.5 py-1 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">' +
+        BLOCOS_ALMUERZO.map(function(bl,k){ return '<option value="'+k+'"'+(k===bloque?' selected':'')+'>'+bl+'</option>'; }).join('') + '</select></td>' +
+      '<td class="px-3 py-1.5"><input data-rop="novedad" value="'+nov.replace(/"/g,'&quot;')+'" placeholder="Ej. cubre phone 1:30-3:00, CW, compensatorio…" class="w-full border border-slate-200 rounded px-2 py-1 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400"></td>' +
+      '</tr>';
+  });
+  tbody += '</tbody>';
+  $('tablaAlmuerzos').innerHTML = thead + tbody;
+  // eventos por fila
+  var rows = $('tablaAlmuerzos').querySelectorAll('tbody tr');
+  for (var r=0; r<rows.length; r++){
+    rows[r].querySelectorAll('select,input[data-rop]').forEach(function(el){
+      el.onchange = (function(rname){
+        return function(){
+          var all = cargarGuardado();
+          all[key] = all[key] || {};
+          all[key][rname] = all[key][rname] || {};
+          all[key][rname][el.dataset.rop] = (el.dataset.rop==='bloque') ? +el.value : el.value;
+          guardarGuardado(all);
+        };
+      })(roster[r].nombre);
+    });
+  }
+}
+
+/* ---------- Vacaciones & Bienestar ---------- */
+var VACACIONES_DEFAULT = [
+  { agente:'Yasmin Puentes',    estado:'Disfrutadas', mes:'Ene',       inicio:'08/01/2026', fin:'16/01/2026', regreso:'19/01/2026', dias:6,  semestre:1 },
+  { agente:'Karen Patiño',      estado:'Disfrutadas', mes:'Ene',       inicio:'30/01/2026', fin:'30/01/2026', regreso:'02/02/2026', dias:1, semestre:1 },
+  { agente:'Alexandra Lopez',   estado:'Disfrutadas', mes:'Ene',       inicio:'19/01/2026', fin:'29/01/2026', regreso:'30/01/2026', dias:9, semestre:1 },
+  { agente:'Jorman Coronado',   estado:'Disfrutadas', mes:'Feb - Mar', inicio:'24/02/2026', fin:'12/03/2026', regreso:'16/03/2026', dias:13, semestre:1 },
+  { agente:'Yasmin Puentes',    estado:'Disfrutadas', mes:'Jun',       inicio:'09/06/2026', fin:'19/06/2026', regreso:'22/06/2026', dias:8, semestre:1 },
+  { agente:'Alvaro Cardenas',   estado:'Aprobadas',    mes:'Jun - Jul', inicio:'30/06/2026', fin:'03/07/2026', regreso:'06/07/2026', dias:4, semestre:1 },
+  { agente:'Alexandra Lopez',   estado:'Aprobadas',    mes:'Jul',      inicio:'06/07/2026', fin:'14/07/2026', regreso:'15/06/2026', dias:6, semestre:1 },
+  { agente:'Jorman Coronado',   estado:'Solicitadas',  mes:'Ago',      inicio:'10/08/2026', fin:'14/08/2026', regreso:'17/08/2026', dias:5, semestre:2 },
+  { agente:'Karen Patiño',      estado:'Solicitadas',  mes:'Ago',       inicio:'20/08/2026', fin:'21/08/2026', regreso:'24/08/2026', dias:2, semestre:2 },
+  { agente:'Yohanna Moreno',    estado:'Aprobadas',    mes:'Ago - Sep', inicio:'31/08/2026', fin:'06/09/2026', regreso:'07/09/2026', dias:5, semestre:2 }
+];
+var BIENESTAR_DEFAULT = [
+  { agente:'Karen Patiño',     fecha:'08/05/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Alexandra Lopez',  fecha:'30/06/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Jorman Coronado',  fecha:'13/03/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Yasmin Puentes',   fecha:'11/05/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Alvaro Cardenas',  fecha:'29/05/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Milena Fernandez', fecha:'21/04/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Yohanna Moreno',   fecha:'08/05/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Juselfy Gomez',    fecha:'22/05/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Luisa Florez',     fecha:'26/06/2026', estado:'Disfrutado', semestre:1 },
+  { agente:'Yohanna Moreno',   fecha:'28/08/2026', estado:'Aprobado',   semestre:2 },
+  { agente:'Jorman Coronado',  fecha:'02/09/2026', estado:'Aprobado',   semestre:2 }
+];
+var VACACIONES = [];
+var BIENESTAR = [];
+
+function cargarVacGuardado(){
+  try {
+    var g = JSON.parse(localStorage.getItem('kPortalVacaciones'));
+    if (g && Array.isArray(g.v) && Array.isArray(g.b)) {
+      VACACIONES = g.v; BIENESTAR = g.b; return;
+    }
+  } catch(e){}
+  if (!VACACIONES.length || !BIENESTAR.length) {
+    VACACIONES = VACACIONES_DEFAULT.map(function(x){return Object.assign({},x);});
+    BIENESTAR = BIENESTAR_DEFAULT.map(function(x){return Object.assign({},x);});
+  }
+}
+function persistirVac(){ try { localStorage.setItem('kPortalVacaciones', JSON.stringify({v:VACACIONES,b:BIENESTAR})); } catch(e){} }
+function resetVac(){ // borrar lo guardado y volver a defaults
+  try { localStorage.removeItem('kPortalVacaciones'); } catch(e){}
+  VACACIONES = VACACIONES_DEFAULT.map(function(x){return Object.assign({},x);});
+  BIENESTAR = BIENESTAR_DEFAULT.map(function(x){return Object.assign({},x);});
+  renderVacaciones();
+}
+function agenteLista(){
+  var s = {};
+  VACACIONES.concat(BIENESTAR).forEach(function(x){ if (x.agente) s[x.agente]=1; });
+  return Object.keys(s).sort();
+}
+
+function badgeViejoEstado(e){
+  var cls = { 'Disfrutadas':'bg-emerald-50 text-emerald-700 border-emerald-200',
+    'Aprobadas':'bg-indigo-50 text-indigo-700 border-indigo-200',
+    'Solicitadas':'bg-amber-50 text-amber-700 border-amber-200' }[e] || 'bg-slate-100 text-slate-600 border-slate-200';
+  return cls;
+}
+function badgeBienEstado(e){
+  return e.indexOf('Aprobado')===0 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-600 border-slate-200';
+}
+
+var subVacTab = 'vac';
+function subVac(tab){
+  subVacTab = tab;
+  var on = 'bg-emerald-500 text-white shadow';
+  var off = 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-50';
+  $('subVac').className = 'chips px-5 py-2 rounded-xl text-sm font-semibold ' + (tab==='vac' ? on : off);
+  $('subBien').className = 'chips px-5 py-2 rounded-xl text-sm font-semibold ' + (tab==='bien' ? on : off);
+  $('btnVacaciones').style.display = tab==='vac' ? '' : 'none';
+  $('btnBienestar').style.display = tab==='bien' ? '' : 'none';
+  renderVacaciones();
+}
+
+function renderVacaciones(){
+  var lv = parseInt($('filtroSemestre').value||'todos',10);
+  var w = $('wrapVacaciones');
+  var lvN = isNaN(lv)?null:lv;
+  var v = VACACIONES.filter(function(x){ return lvN===null || x.semestre===lvN; });
+  var b = BIENESTAR.filter(function(x){ return lvN===null || x.semestre===lvN; });
+
+  var html = '';
+
+  if (subVacTab === 'bien') {
+    /* Bienestar */
+    var disfB = b.filter(function(x){return x.estado==='Disfrutado';}).length;
+    var aproB = b.filter(function(x){return x.estado==='Aprobado';}).length;
+    html += '<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">' +
+      '<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-2xl font-extrabold text-emerald-600">'+disfB+'</div><div class="text-xs text-slate-500 font-semibold">Disfrutados</div></div>' +
+      '<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-2xl font-extrabold text-indigo-600">'+aproB+'</div><div class="text-xs text-slate-500 font-semibold">Aprobados</div></div>' +
+      '<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-2xl font-extrabold text-slate-700">'+b.length+'</div><div class="text-xs text-slate-500 font-semibold">Total</div></div>' +
+      '</div>';
+    html += '<div class="flex items-center gap-3 mt-2 mb-3"><span class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-xl">☀️</span>' +
+      '<div><h3 class="font-bold text-slate-800">Día de Bienestar</h3><p class="text-xs text-slate-500">'+b.length+' registros · día libre extra por semestre</p></div></div>' +
+      '<div class="bg-white rounded-2xl border border-amber-100 shadow-sm overflow-hidden"><div class="px-5 py-3 border-b border-amber-100 font-bold text-amber-700"><span>Detalle de bienestar</span></div>' +
+      '<div class="overflow-x-auto"><table class="w-full text-sm border-collapse"><thead><tr class="bg-amber-50/40">' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Agente</th>' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Fecha</th>' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Estado</th>' +
+      '<th class="px-4 py-2 text-center text-xs font-semibold text-slate-500 border-b border-slate-200"> </th>' +
+      '</tr></thead><tbody>';
+    b.forEach(function(x,i){
+      html += '<tr class="border-b border-slate-100 hover:bg-slate-50">' +
+        '<td class="px-4 py-2 font-semibold text-slate-700">'+x.agente+'</td>' +
+        '<td class="px-4 py-2 text-slate-600">'+x.fecha+'</td>' +
+        '<td class="px-4 py-2"><select onchange="cambiarEstadoV(\'bien\','+i+',this.value)" class="text-[11px] font-semibold px-2 py-1 rounded-full border cursor-pointer '+badgeBienEstado(x.estado)+'">' +
+          '<option value="Disfrutado"'+(x.estado==='Disfrutado'?' selected':'')+'>Disfrutado</option>' +
+          '<option value="Aprobado"'+(x.estado==='Aprobado'?' selected':'')+'>Aprobado</option>' +
+        '</select></td>' +
+        '<td class="px-4 py-2 text-center"><button onclick="eliminarV(\'bien\','+i+')" title="Eliminar" class="w-7 h-7 grid place-items-center rounded-lg text-rose-400 hover:text-rose-600 hover:bg-rose-50 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.87 12.17A2 2 0 0116.13 21H7.87a2 2 0 01-1.99-1.83L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-7 0h10"/></svg></button></td></tr>';
+    });
+    html += '</tbody></table></div></div>';
+  } else {
+    /* Vacaciones */
+    var disfr = v.filter(function(x){return x.estado==='Disfrutadas';}).length;
+    var aprob = v.filter(function(x){return x.estado==='Aprobadas';}).length;
+    var sol = v.filter(function(x){return x.estado==='Solicitadas';}).length;
+    html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">' +
+      '<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-2xl font-extrabold text-emerald-600">'+disfr+'</div><div class="text-xs text-slate-500 font-semibold">Disfrutadas</div></div>' +
+      '<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-2xl font-extrabold text-indigo-600">'+aprob+'</div><div class="text-xs text-slate-500 font-semibold">Aprobadas</div></div>' +
+      '<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-2xl font-extrabold text-amber-600">'+sol+'</div><div class="text-xs text-slate-500 font-semibold">Solicitadas</div></div>' +
+      '<div class="bg-white rounded-2xl border border-slate-200 p-4"><div class="text-2xl font-extrabold text-slate-700">'+v.length+'</div><div class="text-xs text-slate-500 font-semibold">Total</div></div>' +
+      '</div>';
+    html += '<div class="flex items-center gap-3 mt-2 mb-3"><span class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xl">🌴</span>' +
+      '<div><h3 class="font-bold text-slate-800">Vacaciones</h3><p class="text-xs text-slate-500">'+disfr+' disfrutadas · '+aprob+' aprobadas · '+sol+' solicitadas</p></div></div>' +
+      '<div class="bg-white rounded-2xl border border-emerald-100 shadow-sm overflow-hidden"><div class="px-5 py-3 border-b border-emerald-100 font-bold text-emerald-700"><span>Detalle de vacaciones</span></div>' +
+      '<div class="overflow-x-auto"><table class="w-full text-sm border-collapse"><thead><tr class="bg-emerald-50/40">' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Agente</th>' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Estado</th>' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Mes</th>' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Inicio</th>' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Fin</th>' +
+      '<th class="px-4 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Regreso</th>' +
+      '<th class="px-4 py-2 text-center text-xs font-semibold text-slate-500 border-b border-slate-200">Días</th>' +
+      '<th class="px-4 py-2 text-center text-xs font-semibold text-slate-500 border-b border-slate-200"> </th>' +
+      '</tr></thead><tbody>';
+    v.forEach(function(x,i){
+      html += '<tr class="border-b border-slate-100 hover:bg-slate-50">' +
+        '<td class="px-4 py-2 font-semibold text-slate-700">'+x.agente+'</td>' +
+        '<td class="px-4 py-2"><select onchange="cambiarEstadoV(\'vac\','+i+',this.value)" class="text-[11px] font-semibold px-2 py-1 rounded-full border cursor-pointer '+badgeViejoEstado(x.estado)+'">' +
+          '<option value="Disfrutadas"'+(x.estado==='Disfrutadas'?' selected':'')+'>Disfrutadas</option>' +
+          '<option value="Aprobadas"'+(x.estado==='Aprobadas'?' selected':'')+'>Aprobadas</option>' +
+          '<option value="Solicitadas"'+(x.estado==='Solicitadas'?' selected':'')+'>Solicitadas</option>' +
+        '</select></td>' +
+        '<td class="px-4 py-2 text-slate-600">'+x.mes+'</td>' +
+        '<td class="px-4 py-2 text-slate-600">'+x.inicio+'</td>' +
+        '<td class="px-4 py-2 text-slate-600">'+x.fin+'</td>' +
+        '<td class="px-4 py-2 text-slate-600">'+x.regreso+'</td>' +
+        '<td class="px-4 py-2 text-center font-bold text-slate-700">'+x.dias+'</td>' +
+        '<td class="px-4 py-2 text-center"><button onclick="eliminarV(\'vac\','+i+')" title="Eliminar" class="w-7 h-7 grid place-items-center rounded-lg text-rose-400 hover:text-rose-600 hover:bg-rose-50 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.87 12.17A2 2 0 0116.13 21H7.87a2 2 0 01-1.99-1.83L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-7 0h10"/></svg></button></td></tr>';
+    });
+    html += '</tbody></table></div></div>';
+  }
+
+  w.innerHTML = html;
+}
+
+function abrirModalV(tipo, idx){
+  var bien = (tipo==='bien');
+  $('vacTipo').value = tipo;
+  $('vacIdx').value = String(idx==null?-1:idx);
+  $('tituloModalVac').textContent = (idx!=null && idx>=0 ? 'Editar ' : 'Agregar ') + (bien ? 'Día de Bienestar' : 'Vacaciones');
+  // mostrar/ocultar campos
+  ['campo_estado','campo_mes','campo_fechas','campo_dias','campo_bien_fecha'].forEach(function(id){
+    $(id).style.display = 'block';
+  });
+  // estado select según tipo
+  if (bien) {
+    $('campo_mes').style.display='none'; $('campo_fechas').style.display='none'; $('campo_dias').style.display='none';
+    $('campo_sem').style.display='block';
+    $('vac_estado').innerHTML = '<option>Disfrutado</option><option>Aprobado</option>';
+    $('vac_estado').value = 'Disfrutado';
+  } else {
+    $('campo_bien_fecha').style.display='none';
+    $('campo_sem').style.display='none';
+    $('vac_estado').innerHTML = '<option>Disfrutadas</option><option>Aprobadas</option><option>Solicitadas</option>';
+  }
+  $('listaAgentes').innerHTML = agenteLista().map(function(a){return '<option value="'+a+'">';}).join('');
+  // limpiar
+  $('vac_agente').value=''; $('vac_mes').value=''; $('vac_inicio').value=''; $('vac_fin').value=''; $('vac_reg').value=''; $('vac_dias').value=''; $('vac_bien_fecha').value=''; $('vac_sem').value='1';
+  if (idx!=null && idx>=0) {
+    var arr = bien ? BIENESTAR : VACACIONES;
+    var r = arr[idx];
+    if (r) {
+      $('vac_agente').value = r.agente||'';
+      $('vac_sem').value = String(r.semestre||1);
+      if (bien) { $('vac_bien_fecha').value = r.fecha||''; $('vac_estado').value = r.estado||'Disfrutado'; }
+      else { $('vac_estado').value = r.estado||'Aprobadas'; $('vac_mes').value=r.mes||''; $('vac_inicio').value=r.inicio||''; $('vac_fin').value=r.fin||''; $('vac_reg').value=r.regreso||''; $('vac_dias').value=r.dias||''; }
+    }
+  }
+  $('modal-vac').classList.remove('hidden'); $('modal-vac').classList.add('flex');
+}
+
+$('formVac').onsubmit = function(e){
+  e.preventDefault();
+  var bien = ($('vacTipo').value==='bien');
+  var idx = parseInt($('vacIdx').value||'-1',10);
+  var agente = $('vac_agente').value.trim();
+  var sem = parseInt($('vac_sem').value||'1',10);
+  if (!agente) { alert('Escribe el nombre del agente.'); return; }
+  if (bien) {
+    var rec = { agente:agente, fecha:$('vac_bien_fecha').value.trim(), estado:$('vac_estado').value, semestre:sem };
+    if (idx>=0 && idx<BIENESTAR.length) BIENESTAR[idx]=rec; else BIENESTAR.push(rec);
+  } else {
+    var rec = { agente:agente, estado:$('vac_estado').value, mes:$('vac_mes').value.trim(), inicio:$('vac_inicio').value.trim(), fin:$('vac_fin').value.trim(), regreso:$('vac_reg').value.trim(), dias:parseInt($('vac_dias').value||'0',10), semestre:sem };
+    if (idx>=0 && idx<VACACIONES.length) VACACIONES[idx]=rec; else VACACIONES.push(rec);
+  }
+  persistirVac();
+  cerrarModal('modal-vac');
+  renderVacaciones();
+};
+
+function cambiarEstadoV(tipo, idx, val){
+  if (tipo==='bien') { if (idx>=0 && idx<BIENESTAR.length) BIENESTAR[idx].estado = val; }
+  else { if (idx>=0 && idx<VACACIONES.length) VACACIONES[idx].estado = val; }
+  persistirVac();
+  renderVacaciones();
+}
+function eliminarV(tipo, idx){
+  var arr = (tipo==='bien') ? BIENESTAR : VACACIONES;
+  var x = arr[idx];
+  if (!x) return;
+  if (!confirm('¿Eliminar '+(tipo==='bien' ? 'el Día de Bienestar de ' : 'la solicitud de vacaciones de ')+x.agente+'?')) return;
+  arr.splice(idx, 1);
+  persistirVac();
+  renderVacaciones();
+}
+
+/* ---------- Sábados & Festivos ---------- */
+function sabadosDesdeCrono(){
+  var sab = [];
+  try {
+    var filas = (window.EMBED_CRONO || '').split('\n');
+    var weekday = filas.length>1 ? filas[1].split(',') : [];
+    var dates   = filas.length>2 ? filas[2].split(',') : [];
+    var agentes = [];
+    for (var i=3;i<filas.length;i++){ var c = filas[i].split(','); if (c[1]) agentes.push(c); }
+    for (var col=0;col<weekday.length;col++){
+      if (weekday[col]==='sábado' && dates[col]){
+        var cubren = [];
+        agentes.forEach(function(r){
+          var v = r[col]||'';
+          if (v && v!=='VAC') cubren.push(r[1]);
+        });
+        var enVac = agentes.filter(function(r){ return (r[col]||'')==='VAC'; }).map(function(r){ return r[1]; });
+        sab.push({ fecha:dates[col], tipo:'Sábado', dia:'Sábado', agentes:cubren.join(', '), obs: enVac.length ? 'En vacaciones: '+enVac.join(', ') : '' });
+      }
+    }
+  } catch(e){}
+  return sab;
+}
+var ANIOS_FESTIVOS = [2026, 2027];
+var AGENTES_SABADOS = {
+  '3-ene':'Alexandra López',
+  '10-ene':'Karen Patiño',
+  '17-ene':'Jorman Coronado',
+  '24-ene':'Milena Fernández',
+  '31-ene':'Juselfy Gomez',
+  '7-feb':'Alvaro Cardenas',
+  '14-feb':'Alexandra López',
+  '21-feb':'Yasmin Puentes',
+  '28-feb':'Karen Patiño',
+  '7-mar':'Milena Fernández',
+  '14-mar':'Juselfy Gomez',
+  '21-mar':'Jorman Coronado',
+  '4-abr':'Juselfy Gomez',
+  '11-abr':'Alvaro Cardenas',
+  '18-abr':'Yasmin Puentes',
+  '25-abr':'Alexandra López',
+  '2-may':'Karen Patiño',
+  '9-may':'Jorman Coronado',
+  '16-may':'Alexandra López',
+  '23-may':'Luisa Florez',
+  '30-may':'Juselfy Gomez',
+  '6-jun':'Yohanna Moreno',
+  '13-jun':'Milena Fernández',
+  '20-jun':'Alvaro Cardenas',
+  '27-jun':'Yasmin Puentes',
+  '4-jul':'Karen Patiño',
+  '11-jul':'Luisa Florez',
+  '18-jul':'Jorman Coronado',
+  '25-jul':'Juselfy Gomez',
+  '1-ago':'Yohanna Moreno',
+  '8-ago':'Alexandra López',
+  '15-ago':'Milena Fernández',
+  '22-ago':'Alvaro Cardenas',
+  '29-ago':'Yasmin Puentes',
+  '5-sep':'Karen Patiño',
+  '12-sep':'Luisa Florez',
+  '19-sep':'Jorman Coronado',
+  '26-sep':'Juselfy Gomez'
+};
+function pascua(anio){
+  var a = anio % 19, b = Math.floor(anio/100), c = anio % 100;
+  var d = Math.floor(b/4), e = b % 4;
+  var f = Math.floor((b+8)/25), g = Math.floor((b-f+1)/3);
+  var h = (19*a + b - d - g + 15) % 30;
+  var i = Math.floor(c/4), k = c % 4;
+  var l = (32 + 2*e + 2*i - h - k) % 7;
+  var m = Math.floor((a + 11*h + 22*l)/451);
+  var mes = Math.floor((h + l - 7*m + 114)/31) - 1;
+  var dia = (h + l - 7*m + 114) % 31 + 1;
+  return new Date(anio, mes, dia);
+}
+function lunesSiguiente(d){
+  var x = new Date(d);
+  while (x.getDay() !== 1) x.setDate(x.getDate()+1);
+  return x;
+}
+var FEST_DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+var FEST_MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+var FEST_MMAP = {}; FEST_MESES.forEach(function(nm,i){ FEST_MMAP[nm]=i+1; });
+function generarFestivos(anio){
+  var recs = [];
+  function n(d,nombre,ven){
+    recs.push({ fecha:d.getDate()+'-'+FEST_MESES[d.getMonth()], anio:d.getFullYear(), tipo:'Festivo', dia:FEST_DIAS[d.getDay()], agentes:'', obs:nombre+(ven?' / '+ven:'') });
+  }
+  function s(d){
+    var f = d.getDate()+'-'+FEST_MESES[d.getMonth()];
+    recs.push({ fecha:f, anio:d.getFullYear(), tipo:'Sábado', dia:'Sábado', agentes:AGENTES_SABADOS[f]||'', obs:'' });
+  }
+  var P = pascua(anio);
+  /* Sábados del año */
+  var d = new Date(anio,0,1);
+  while (d.getFullYear()===anio) { if (d.getDay()===6) s(d); d.setDate(d.getDate()+1); }
+  /* Semana Santa y Carnaval (móviles desde Pascua) */
+  n(new Date(P.getFullYear(),P.getMonth(),P.getDate()-3),'Jueves Santo (COL)','Jueves Santo (VEN)');
+  n(new Date(P.getFullYear(),P.getMonth(),P.getDate()-2),'Viernes Santo (COL)','Viernes Santo (VEN)');
+  n(new Date(P.getFullYear(),P.getMonth(),P.getDate()-48),'Carnaval (VEN)');
+  n(new Date(P.getFullYear(),P.getMonth(),P.getDate()-47),'Carnaval (VEN)');
+  /* COL trasladables (Ley Emiliani): se pasan al lunes siguiente */
+  function emiliani(d0,nombre){
+    var t = new Date(d0);
+    if (t.getDay()!==1) t = lunesSiguiente(t);
+    n(t,nombre);
+  }
+  emiliani(new Date(anio,0,6),'Reyes Magos (COL)');
+  emiliani(new Date(anio,2,19),'San José (COL)');
+  emiliani(new Date(P.getFullYear(),P.getMonth(),P.getDate()+39),'Ascensión del Señor (COL)');
+  emiliani(new Date(P.getFullYear(),P.getMonth(),P.getDate()+60),'Corpus Christi (COL)');
+  emiliani(new Date(P.getFullYear(),P.getMonth(),P.getDate()+68),'Sagrado Corazón (COL)');
+  emiliani(new Date(anio,5,29),'San Pedro y San Pablo (COL)');
+  emiliani(new Date(anio,7,15),'Asunción de la Virgen (COL)');
+  emiliani(new Date(anio,9,12),'Día de la Raza (COL)');
+  emiliani(new Date(anio,10,1),'Todos los Santos (COL)');
+  emiliani(new Date(anio,10,11),'Independencia de Cartagena (COL)');
+  emiliani(new Date(anio,11,8),'Inmaculada Concepción (COL)');
+  /* Fijos compartidos */
+  n(new Date(anio,0,1),'Año Nuevo (COL)','Año Nuevo (VEN)');
+  n(new Date(anio,4,1),'Día del Trabajo (COL)','Día del Trabajador (VEN)');
+  n(new Date(anio,11,25),'Navidad (COL)','Navidad (VEN)');
+  /* Fijos COL */
+  n(new Date(anio,6,20),'Independencia de Colombia (COL)');
+  n(new Date(anio,7,7),'Batalla de Boyacá (COL)');
+  /* Fijos VEN */
+  n(new Date(anio,5,24),'Batalla de Carabobo (VEN)');
+  n(new Date(anio,6,5),'Día de la Independencia (VEN)');
+  n(new Date(anio,6,24),'Natalicio de Simón Bolívar (VEN)');
+  n(new Date(anio,9,12),'Día de la Resistencia Indígena (VEN)');
+  /* fusionar registros que caen el mismo día (p. ej. Día de la Raza COL + VEN) */
+  var porLlave = {};
+  recs.forEach(function(r){ var k=r.fecha+'|'+r.tipo; if (porLlave[k]) { if (r.obs && porLlave[k].obs.indexOf(r.obs)<0) porLlave[k].obs += ' / '+r.obs; } else porLlave[k]=r; });
+  recs = Object.keys(porLlave).map(function(k){ return porLlave[k]; });
+  recs.sort(function(a,b){
+    var pa = a.fecha.split('-'), pb = b.fecha.split('-');
+    var ma = FEST_MMAP[pa[1]], mb = FEST_MMAP[pb[1]];
+    if (ma!==mb) return ma-mb;
+    return parseInt(pa[0],10)-parseInt(pb[0],10);
+  });
+  return recs;
+}
+function poblarFiltroMes(){
+  var sel = $('filtroMesFest'); if (!sel) return;
+  var names = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  ANIOS_FESTIVOS.forEach(function(y){
+    for (var m=1;m<=12;m++){
+      var o = document.createElement('option');
+      o.value = y+'-'+(m<10?'0':'')+m;
+      o.textContent = names[m-1]+' '+y;
+      sel.appendChild(o);
+    }
+  });
+}
+var FESTIVOS_DEFAULT = generarFestivos(2026).concat(generarFestivos(2027));
+var FESTIVOS = [];
+function cargarFestGuardado(){
+  var base = FESTIVOS_DEFAULT.map(function(x){ var y = Object.assign({}, x); if (!y.anio) y.anio = 2026; return y; });
+  var g = null;
+  try { g = JSON.parse(localStorage.getItem('kPortalFestivos2')); } catch(e){}
+  if (Array.isArray(g) && g.length) {
+    var porLlave = {};
+    base.forEach(function(x){ porLlave[x.anio+'|'+x.fecha+'|'+x.tipo] = x; });
+    g.forEach(function(x){
+      if (!x || !x.fecha) return;
+      var llave = ((x.anio)||2026)+'|'+x.fecha+'|'+(x.tipo||'Sábado');
+      if (porLlave[llave]) Object.assign(porLlave[llave], x);
+      else base.push(Object.assign({}, x));
+    });
+    FESTIVOS = base;
+  } else {
+    FESTIVOS = base;
+  }
+}
+function persistirFest(){ try { localStorage.setItem('kPortalFestivos2', JSON.stringify(FESTIVOS)); } catch(e){} }
+
+var festMes = null; /* {y, m} */
+function festParseFecha(f){
+  if (!f) return null;
+  var m = String(f).trim();
+  var mm = {'ene':1,'feb':2,'mar':3,'abr':4,'may':5,'jun':6,'jul':7,'ago':8,'sep':9,'oct':10,'nov':11,'dic':12};
+  var r1 = m.match(/^(\d{1,2})-(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)$/i);
+  if (r1) return { y:2026, m:mm[r1[2].toLowerCase()], d:parseInt(r1[1],10) };
+  var r2 = m.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (r2) return { y:parseInt(r2[3],10)<100?2000+parseInt(r2[3],10):parseInt(r2[3],10), m:parseInt(r2[2],10), d:parseInt(r2[1],10) };
+  return null;
+}
+function festKey(y,m,d){ return y+'-'+m+'-'+d; }
+function festIniciales(nombre){
+  var p = (nombre||'').trim().split(/\s+/);
+  return ((p[0]?p[0][0]:'') + (p.length>1?p[1][0]:'')).toUpperCase();
+}
+function festMesNombre(y,m){
+  return ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][m-1] + ' ' + y;
+}
+function festCorto(d,m){
+  var mm = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return d+'-'+mm[m-1];
+}
+function navegarFestMes(dir){
+  if (!festMes) festMes = { y:2026, m:8 };
+  var y = festMes.y, m = festMes.m + dir;
+  if (m < 1) { m = 12; y--; } else if (m > 12) { m = 1; y++; }
+  festMes = { y:y, m:m };
+  $('filtroMesFest').value = y + '-' + (m<10?'0':'') + m;
+  renderFestivos();
+}
+function cambiarMesFest(val){
+  if (!val || val==='todos') festMes = null;
+  else { var p = val.split('-'); festMes = { y:parseInt(p[0],10), m:parseInt(p[1],10) }; }
+  renderFestivos();
+}
+
+function renderFestivos(){
+  var w = $('wrapFestivos');
+  if (!w) return;
+  if (!FESTIVOS.length) {
+    var html0 = '<div class="p-10 text-center text-slate-400 border border-dashed border-slate-300 rounded-2xl">Aún no hay sábados/festivos para mostrar.</div>';
+    w.innerHTML = html0; return;
+  }
+  var html = '';
+
+  var filtro = null;
+  if (festMes) filtro = true;
+
+  var grupos = [ { tipo:'Sábado', icono:'🛠️', titulo:'Sábados', clase:'bg-slate-800', head:'bg-slate-50', borde:'border-slate-200' },
+                 { tipo:'Festivo', icono:'🎉', titulo:'Festivos', clase:'bg-rose-500', head:'bg-rose-50/40', borde:'border-rose-100' } ];
+
+  grupos.forEach(function(g){
+    var items = [];
+    FESTIVOS.forEach(function(x,i){
+      if (x.tipo!==g.tipo) return;
+      if (filtro) {
+        var p = festParseFecha(x.fecha);
+        if (!p) return;
+        var py = x.anio || p.y;
+        if (py!==festMes.y || p.m!==festMes.m) return;
+      }
+      items.push({x:x,i:i});
+    });
+    if (!items.length) return;
+    html += '<div class="flex items-center gap-3 mt-2 mb-3">' +
+      '<span class="w-10 h-10 rounded-xl '+g.clase+' flex items-center justify-center text-white text-lg">'+g.icono+'</span>' +
+      '<div><h3 class="font-bold text-slate-800">'+g.titulo+'</h3><p class="text-xs text-slate-500">'+items.length+' registro'+(items.length===1?'':'s')+'</p></div></div>';
+    html += '<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8"><div class="overflow-x-auto">' +
+      '<table class="w-full text-sm border-collapse">' +
+      '<thead><tr class="'+g.head+'">' +
+      '<th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 min-w-[90px]">Fecha</th>' +
+      '<th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 border-b border-slate-200">Día</th>' +
+      '<th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 min-w-[260px]">Agentes que cubren</th>' +
+      '<th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 min-w-[180px]">Observaciones</th>' +
+      '<th class="px-4 py-3 text-center text-xs font-semibold text-slate-500 border-b border-slate-200">Acciones</th>' +
+      '</tr></thead><tbody>';
+    items.forEach(function(it){
+      var x = it.x, i = it.i;
+      var agentes = (x.agentes||'').split(/,\s*/).filter(Boolean);
+      var chips = agentes.map(function(a){
+        return '<span class="inline-flex items-center gap-1.5 bg-slate-100 border border-slate-200 rounded-full pl-1 pr-2.5 py-0.5 text-xs font-semibold text-slate-700"><span class="w-4 h-4 grid place-items-center rounded-full bg-white border border-slate-200 text-[8px] font-bold text-slate-500">'+festIniciales(a)+'</span>'+a+'</span>';
+      }).join(' ');
+      html += '<tr class="border-b border-slate-100 hover:bg-slate-50/70">' +
+        '<td class="px-4 py-3 font-bold text-slate-800">'+x.fecha+'</td>' +
+        '<td class="px-4 py-3 text-slate-600">'+x.dia+'</td>' +
+        '<td class="px-4 py-3"><div class="flex flex-wrap gap-1.5 max-w-[480px]">'+chips+'</div></td>' +
+        '<td class="px-4 py-3 text-xs text-amber-600">'+(x.obs||'')+'</td>' +
+        '<td class="px-4 py-3 text-center"><div class="flex items-center justify-center gap-1">' +
+          '<button onclick="abrirFestivo('+i+')" title="Editar" class="w-8 h-8 grid place-items-center rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>' +
+        '</div></td></tr>';
+    });
+    html += '</tbody></table></div></div>';
+  });
+
+  if (!html) {
+    html = '<div class="p-10 text-center text-slate-400 border border-dashed border-slate-300 rounded-2xl">No hay registros para ' + festMesNombre(festMes.y, festMes.m) + '.</div>';
+  }
+
+  w.innerHTML = html;
+}
+
+function abrirFestivoDia(y,m,d){
+  abrirFestivo(-1);
+  $('fest_fecha').value = festCorto(d,m);
+}
+
+function abrirFestivo(idx){
+  $('festIdx').value = String(idx==null?-1:idx);
+  $('tituloModalFestivo').textContent = 'Editar Sábado/Festivo';
+  var actuales = [];
+  if (idx!=null && idx>=0 && FESTIVOS[idx]) {
+    actuales = (FESTIVOS[idx].agentes||'').split(/,\s*/).filter(Boolean).map(function(a){return a.trim();});
+  }
+  var box = '';
+  agenteLista().forEach(function(a){
+    var chk = actuales.indexOf(a)>=0 ? ' checked' : '';
+    box += '<label class="flex items-center gap-1.5 text-sm text-slate-700 py-1 px-1 rounded hover:bg-slate-50 cursor-pointer"><input type="checkbox" data-agente="'+a+'"'+chk+' class="accent-emerald-500">'+a+'</label>';
+  });
+  $('fest_agentes_box').innerHTML = box;
+  $('fest_fecha').value=''; $('fest_tipo').value='Sábado'; $('fest_dia').value='Sábado'; $('fest_obs').value='';
+  if (idx!=null && idx>=0 && FESTIVOS[idx]) {
+    var r = FESTIVOS[idx];
+    $('fest_fecha').value = r.fecha||'';
+    $('fest_tipo').value = r.tipo||'Sábado';
+    $('fest_dia').value = r.dia||'Sábado';
+    $('fest_obs').value = r.obs||'';
+  }
+  $('modal-festivo').classList.remove('hidden'); $('modal-festivo').classList.add('flex');
+}
+
+function agentesSeleccionados(){
+  var n = [];
+  var checks = $('fest_agentes_box').querySelectorAll('input[type="checkbox"]:checked');
+  for (var i=0;i<checks.length;i++) n.push(checks[i].getAttribute('data-agente'));
+  return n.join(', ');
+}
+
+$('formFestivo').onsubmit = function(e){
+  e.preventDefault();
+  var idx = parseInt($('festIdx').value||'-1',10);
+  var fecha = $('fest_fecha').value.trim();
+  if (!fecha) { alert('Escribe la fecha.'); return; }
+  var rec = { fecha:fecha, anio:(idx>=0 && idx<FESTIVOS.length)?FESTIVOS[idx].anio:(festMes?festMes.y:2026), tipo:$('fest_tipo').value, dia:$('fest_dia').value, agentes:agentesSeleccionados(), obs:$('fest_obs').value.trim() };
+  if (idx>=0 && idx<FESTIVOS.length) FESTIVOS[idx]=rec; else FESTIVOS.push(rec);
+  persistirFest();
+  cerrarModal('modal-festivo');
+  renderFestivos();
+};
+
+/* ---------- Horas de Formación ---------- */
+var FORMACION_HORAS = ['8:30','9:00','9:30','10:00','10:30'];
+var FORM_PALETA_SOLID = ['bg-sky-500','bg-emerald-500','bg-amber-500','bg-indigo-500','bg-rose-500','bg-fuchsia-500','bg-teal-500','bg-orange-500','bg-violet-500','bg-cyan-600'];
+var FORM_PALETA_PASTEL = ['bg-sky-50 text-sky-700 border-sky-200','bg-emerald-50 text-emerald-700 border-emerald-200','bg-amber-50 text-amber-700 border-amber-200','bg-indigo-50 text-indigo-700 border-indigo-200','bg-rose-50 text-rose-700 border-rose-200','bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200','bg-teal-50 text-teal-700 border-teal-200','bg-orange-50 text-orange-700 border-orange-200','bg-violet-50 text-violet-700 border-violet-200','bg-cyan-50 text-cyan-700 border-cyan-200'];
+function formIdx(h){
+  var i = FORMACION_HORAS.indexOf(h);
+  if (i>=0) return i;
+  var x = 0;
+  for (var k=0;k<h.length;k++) x = (x*31 + h.charCodeAt(k)) % FORM_PALETA_SOLID.length;
+  return x;
+}
+function formColor(h){
+  if (!h || h==='N/A') return 'bg-slate-100 text-slate-500 border-slate-200';
+  return FORM_PALETA_PASTEL[formIdx(h) % FORM_PALETA_PASTEL.length];
+}
+function formFin(h){
+  var p = h.split(':');
+  var min = parseInt(p[0],10)*60 + parseInt(p[1],10) + 60;
+  return Math.floor(min/60) + ':' + ((min%60)<10?'0':'') + (min%60);
+}
+function formBloque(h){ return h + ' - ' + formFin(h); }
+function formHora(v){ if (!v || v==='N/A') return v; var i=v.indexOf('|'); return i>=0 ? v.slice(0,i) : v; }
+function formDia(v){ if (!v || v==='N/A') return ''; var i=v.indexOf('|'); return i>=0 ? v.slice(i+1) : ''; }
+function formDiaLabel(v){
+  var d=formDia(v);
+  var m={'lun':'Lunes','mar':'Martes','mié':'Miércoles','jue':'Jueves','vie':'Viernes','sáb':'Sábado','dom':'Domingo','fest':'Festivo'};
+  return d ? (m[d]||d) : '';
+}
+function formDiaCorto(d){
+  var m={'lun':'Lun','mar':'Mar','mié':'Mié','jue':'Jue','vie':'Vie','sáb':'Sáb','dom':'Dom','fest':'Fest'};
+  return m[d]||d;
+}
+var FORM_DIAS = ['lun','mar','mié','jue','vie','sáb','dom','fest'];
+function formSolid(h){
+  if (!h || h==='N/A') return 'bg-slate-400 text-white';
+  return FORM_PALETA_SOLID[formIdx(h) % FORM_PALETA_SOLID.length] + ' text-white';
+}
+function horaMin(h){
+  var p = h.split(':');
+  return parseInt(p[0],10)*60 + parseInt(p[1],10);
+}
+function todasHorasMes(mes){
+  var set = {};
+  mes.agentes.forEach(function(x){ x.semanas.forEach(function(v){ var h=formHora(v); if (h && h!=='N/A') set[h]=1; }); });
+  return Object.keys(set).sort(function(a,b){ return horaMin(a)-horaMin(b); });
+}
+function formOptions(h, horas){
+  var html = '';
+  (horas || FORMACION_HORAS).forEach(function(x){
+    html += '<option value="'+x+'"'+(h===x?' selected':'')+'>'+formBloque(x)+'</option>';
+  });
+  html += '<option value="N/A"'+(h==='N/A'?' selected':'')+'>N/A</option>' +
+          '<option value=""'+(h===''?' selected':'')+'>—</option>';
+  return html;
+}
+var FORMACION_MESES = [];
+var mesFormActivo = '2026-08';
+function cargarFormGuardado(){
+  FORMACION_MESES = JSON.parse(JSON.stringify(window.EMBED_FORMACION_MESES || []));
+  try {
+    var g = JSON.parse(localStorage.getItem('kPortalFormacionMeses'));
+    if (Array.isArray(g)) {
+      g.forEach(function(sm){
+        var idx = FORMACION_MESES.findIndex(function(m){ return m.key===sm.key; });
+        if (idx>=0 && sm.agentes) FORMACION_MESES[idx].agentes = sm.agentes;
+      });
+    }
+  } catch(e){}
+  try {
+    var viejo = JSON.parse(localStorage.getItem('kPortalFormacion'));
+    if (Array.isArray(viejo)) {
+      var ago = FORMACION_MESES.find(function(m){ return m.key==='2026-08'; });
+      if (ago) {
+        viejo.forEach(function(v){
+          var a = ago.agentes.find(function(x){ return x.agente===v.agente; });
+          if (a && Array.isArray(v.dias)) v.dias.forEach(function(h,i){
+            if (i>=0 && i<a.semanas.length && h!==undefined) a.semanas[i]=h;
+          });
+        });
+      }
+      localStorage.removeItem('kPortalFormacion');
+    }
+  } catch(e){}
+  var act = null; try { act = localStorage.getItem('kPortalFormMesActivo'); } catch(e){}
+  if (act && FORMACION_MESES.some(function(m){ return m.key===act; })) mesFormActivo = act;
+  var sel = $('filtroMesForm');
+  if (sel) {
+    sel.innerHTML = FORMACION_MESES.map(function(m){ return '<option value="'+m.key+'">'+m.titulo+'</option>'; }).join('');
+    sel.value = mesFormActivo;
+  }
+}
+function persistirForm(){
+  try { localStorage.setItem('kPortalFormacionMeses', JSON.stringify(FORMACION_MESES)); } catch(e){}
+  try { localStorage.setItem('kPortalFormMesActivo', mesFormActivo); } catch(e){}
+}
+function aplicarFormImport(g){
+  var n = 0;
+  g.forEach(function(sm){
+    if (!sm || !sm.key || !Array.isArray(sm.agentes)) return;
+    var idx = FORMACION_MESES.findIndex(function(m){ return m.key===sm.key; });
+    if (idx>=0) FORMACION_MESES[idx].agentes = sm.agentes;
+    else FORMACION_MESES.push({ key:sm.key, titulo:sm.titulo||sm.key, semanas:sm.semanas||[], agentes:sm.agentes });
+    n++;
+  });
+  return n;
+}
+function exportarFormacion(){
+  var blob = new Blob([JSON.stringify(FORMACION_MESES, null, 2)], { type:'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'formacion_meses.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importarFormacion(){
+  var inp = $('importFormArchivo');
+  if (inp) inp.click();
+}
+var _impForm = $('importFormArchivo');
+if (_impForm) _impForm.onchange = function(e){
+  var file = e.target && e.target.files && e.target.files[0];
+  if (!file) return;
+  var rd = new FileReader();
+  rd.onload = function(){
+    var m = $('guardadoFormMensaje');
+    try {
+      var g = JSON.parse(rd.result);
+      if (!Array.isArray(g)) throw new Error('formato inválido');
+      var n = aplicarFormImport(g);
+      persistirForm();
+      renderFormacion();
+      if (m) { m.textContent = '✓ Importadas '+n+' meses de formación.'; m.classList.remove('hidden'); setTimeout(function(){ m.classList.add('hidden'); }, 2500); }
+    } catch(err) {
+      if (m) { m.textContent = '⚠ No se pudo importar: archivo inválido.'; m.classList.remove('hidden'); setTimeout(function(){ m.classList.add('hidden'); }, 3000); }
+    }
+  };
+  rd.readAsText(file);
+  e.target.value = '';
+};
+function cambiarMesForm(){
+  var sel = $('filtroMesForm');
+  if (sel) mesFormActivo = sel.value;
+  renderFormacion();
+  persistirForm();
+}
+var _fsel = $('filtroMesForm');
+if (_fsel) _fsel.onchange = cambiarMesForm;
+
+function renderFormacion(){
+  var w = $('wrapFormacion');
+  if (!w) return;
+  var mes = FORMACION_MESES.find(function(m){ return m.key===mesFormActivo; });
+  if (!mes) return;
+  var horas = todasHorasMes(mes);
+  var ley = $('leyendaForm');
+  if (ley) {
+    var chips = horas.map(function(h){
+      return '<span class="text-xs font-semibold px-2 py-0.5 rounded-full border '+formColor(h)+'">'+formBloque(h)+'</span>';
+    }).join('');
+    chips += '<span class="text-xs font-semibold px-2 py-0.5 rounded-full border bg-slate-100 text-slate-500 border-slate-200">N/A</span>';
+    ley.innerHTML = chips;
+  }
+  var html = '<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">';
+  mes.semanas.forEach(function(sw, j){
+    var porDia = {}, sinAsignar = [], na = [];
+    mes.agentes.forEach(function(x){
+      var v = x.semanas[j];
+      if (!v) sinAsignar.push(x.agente);
+      else if (v==='N/A') na.push(x.agente);
+      else { var d=formDia(v)||'?'; (porDia[d] = porDia[d]||[]).push({n:x.agente, h:formHora(v)}); }
+    });
+    html += '<div class="bg-white rounded-2xl border border-sky-100 shadow-sm overflow-hidden">' +
+      '<div class="px-4 py-3 bg-sky-50/50 border-b border-sky-100 flex items-center justify-between gap-2">' +
+        '<div class="flex items-center gap-2"><span class="text-lg">🎓</span><div><div class="font-bold text-sky-700 text-sm">'+sw.titulo+'</div><div class="text-[11px] text-slate-500">'+sw.fechas+'</div></div></div>' +
+        '<button onclick="abrirModalFormacion('+j+')" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white border border-sky-200 text-sky-600 hover:bg-sky-50 whitespace-nowrap">✎ Editar</button>' +
+      '</div><div class="p-3 space-y-2">';
+    var diasPresentes = Object.keys(porDia).sort(function(a,b){ return FORM_DIAS.indexOf(a)-FORM_DIAS.indexOf(b); });
+    diasPresentes.forEach(function(d){
+      var agentes = porDia[d]||[];
+      var porH = {};
+      agentes.forEach(function(o){ (porH[o.h] = porH[o.h]||[]).push(o.n); });
+      var hs = Object.keys(porH).sort(function(a,b){ return horaMin(a)-horaMin(b); });
+      var grupos = hs.map(function(h){
+        var chips = porH[h].map(function(n){
+          return '<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full '+formSolid(h)+'">'+n+'</span>';
+        }).join(' ');
+        return '<div class="flex flex-wrap items-center gap-1.5">' +
+          '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-white border border-slate-300 text-slate-600">'+h+'</span>' +
+          chips + '</div>';
+      }).join('');
+      html += '<div class="rounded-xl border border-slate-200 bg-slate-50/40 px-3 py-2">' +
+        '<div class="flex items-start gap-2"><span class="w-12 shrink-0 text-[11px] font-bold text-slate-600 pt-0.5">'+formDiaCorto(d)+'</span>' +
+        '<div class="space-y-1.5 flex-1">'+grupos+'</div></div></div>';
+    });
+    var naChips = na.map(function(a){
+      return '<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border bg-slate-100 text-slate-500 border-slate-200">'+a+'</span>';
+    }).join(' ');
+    html += '<div class="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 bg-slate-50/40">' +
+      '<span class="w-24 shrink-0 text-[11px] font-bold text-slate-400">N/A</span>' +
+      '<div class="flex flex-wrap gap-1.5">'+(naChips||'<span class="text-[11px] text-slate-300">—</span>')+'</div></div>';
+    var saChips = sinAsignar.map(function(a){
+      return '<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-dashed border-slate-300 text-slate-400">'+a+'</span>';
+    }).join(' ');
+    html += '<div class="flex items-center gap-2 rounded-xl border border-dashed border-slate-200 px-3 py-2">' +
+      '<span class="w-24 shrink-0 text-[11px] font-bold text-slate-400">Sin asignar</span>' +
+      '<div class="flex flex-wrap gap-1.5">'+(saChips||'<span class="text-[11px] text-slate-300">—</span>')+'</div></div>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+  html += '<div class="text-xs text-slate-400 mt-3">💡 La formación es una rotación semanal por mes · cada fila es un día de la semana y el chip muestra el agente con su hora (el color del chip indica el bloque). Elige el mes arriba y pulsa "✎ Editar" en una semana para asignar. Los cambios se guardan automáticamente.</div>';
+  w.innerHTML = html;
+}
+function formDiaOptions(d){
+  var html = '<option value=""'+(d===''?' selected':'')+'>—</option>';
+  FORM_DIAS.forEach(function(x){ html += '<option value="'+x+'"'+(d===x?' selected':'')+'>'+x+'</option>'; });
+  return html;
+}
+function abrirModalFormacion(j){
+  var mes = FORMACION_MESES.find(function(m){ return m.key===mesFormActivo; });
+  if (!mes) return;
+  var horas = todasHorasMes(mes);
+  $('formSemanaIdx').value = String(j);
+  $('tituloModalFormacion').textContent = 'Editar · ' + mes.semanas[j].titulo + ' (' + mes.semanas[j].fechas + ')';
+  var box = '';
+  mes.agentes.forEach(function(x,i){
+    var v = x.semanas[j] || '';
+    var h = formHora(v), d = formDia(v);
+    box += '<div class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2">' +
+      '<span class="text-sm font-semibold text-slate-700">'+x.agente+'</span>' +
+      '<div class="flex items-center gap-1.5">' +
+      '<select data-formdia="'+i+'" class="text-xs font-semibold px-2 py-1.5 rounded-full border cursor-pointer border-slate-200 text-slate-500 bg-white">' + formDiaOptions(d) + '</select>' +
+      '<select data-formagente="'+i+'" class="text-xs font-semibold px-2.5 py-1.5 rounded-full border cursor-pointer '+(h?formColor(h):'border-slate-200 text-slate-400 bg-white')+'">' + formOptions(h, horas) + '</select></div></div>';
+  });
+  $('cuerpoModalFormacion').innerHTML = box;
+  abrirModal('modal-formacion');
+}
+$('formFormacion').onsubmit = function(e){
+  e.preventDefault();
+  var j = parseInt($('formSemanaIdx').value||'0',10);
+  var sels = $('cuerpoModalFormacion').querySelectorAll('select[data-formagente]');
+  var dias = $('cuerpoModalFormacion').querySelectorAll('select[data-formdia]');
+  var mes = FORMACION_MESES.find(function(m){ return m.key===mesFormActivo; });
+  for (var k=0;k<sels.length;k++){
+    var i = parseInt(sels[k].getAttribute('data-formagente'),10);
+    var t = sels[k].value;
+    var d = dias[k] ? dias[k].value : '';
+    if (mes && i>=0 && i<mes.agentes.length && j>=0 && j<mes.agentes[i].semanas.length) {
+      mes.agentes[i].semanas[j] = (t==='' || t==='N/A') ? t : (d ? t+'|'+d : t);
+    }
+  }
+  persistirForm();
+  cerrarModal('modal-formacion');
+  renderFormacion();
+};
+
+/* ---------- Cronograma ---------- */
+var CRONO_FECHAS = ['03-ago','04-ago','05-ago','06-ago','07-ago','08-ago','09-ago','10-ago','11-ago','12-ago','13-ago','14-ago','15-ago','16-ago','17-ago','18-ago','19-ago','20-ago','21-ago','22-ago','23-ago','24-ago','25-ago','26-ago','27-ago','28-ago','29-ago','30-ago','31-ago'];
+function cronoColor(c){
+  if (c==='Phone') return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+  if (c==='Chat') return 'bg-sky-50 text-sky-700 border-sky-200';
+  if (c==='PP') return 'bg-violet-50 text-violet-700 border-violet-200';
+  if (c==='VAC') return 'bg-amber-50 text-amber-700 border-amber-200';
+  if (c==='Día C') return 'bg-rose-50 text-rose-600 border-rose-200';
+  return 'bg-slate-100 text-slate-500 border-slate-200';
+}
+var CRONO_DEFAULT = (function(){
+  var d = [];
+  try {
+    var filas = (window.EMBED_CRONO || '').split('\n');
+    for (var i=3;i<filas.length;i++){
+      var c = filas[i].split(',');
+      if (!c[1]) continue;
+      d.push({ agente:c[1], dias:c.slice(2, 31) });
+    }
+  } catch(e){}
+  return d;
+})();
+var CRONO = [];
+function cargarCronoGuardado(){
+  try {
+    var g = JSON.parse(localStorage.getItem('kPortalCrono'));
+    if (Array.isArray(g) && g.length===CRONO_DEFAULT.length) { CRONO = g; return; }
+  } catch(e){}
+  if (!CRONO.length) {
+    CRONO = CRONO_DEFAULT.map(function(x){ return { agente:x.agente, dias:x.dias.slice() }; });
+  }
+}
+function persistirCrono(){ try { localStorage.setItem('kPortalCrono', JSON.stringify(CRONO)); } catch(e){} }
+
+function renderCronograma(){
+  var w = $('wrapCronograma');
+  if (!w) return;
+  var sel = parseInt($('filtroSemanaCrono').value||'1',10);
+  var semanas = [ [0,7,'Semana 1 · 03–07 ago'], [7,14,'Semana 2 · 10–14 ago'], [14,21,'Semana 3 · 17–21 ago'], [21,28,'Semana 4 · 24–28 ago'], [28,29,'31 ago'] ];
+  var mostrar = (sel>=1 && sel<=5) ? [semanas[sel-1]] : semanas;
+  var html = '';
+  mostrar.forEach(function(sw){
+    html += '<div class="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden"><div class="px-5 py-3 border-b border-indigo-100 font-bold text-indigo-700">📅 '+sw[2]+'</div>' +
+      '<div class="overflow-x-auto"><table class="w-full text-sm border-collapse"><thead><tr class="bg-indigo-50/40">' +
+      '<th class="px-3 py-2 text-left text-xs font-semibold text-slate-500 border-b border-slate-200 sticky left-0 bg-indigo-50/40">Agente</th>';
+    var cols = [];
+    for (var j=sw[0]; j<sw[1]; j++){
+      var f = CRONO_FECHAS[j];
+      var d = parseInt(f.split('-')[0],10); var dow = new Date(2026,7,d).getDay();
+      if (dow===0 || dow===6) continue;
+      cols.push(j);
+      html += '<th class="px-3 py-2 text-center text-xs font-semibold text-slate-500 border-b border-slate-200 min-w-[120px]">'+f.replace('-ago','')+'</th>';
+    }
+    html += '</tr></thead><tbody>';
+    CRONO.forEach(function(x,i){
+      html += '<tr class="border-b border-slate-100 hover:bg-slate-50">' +
+        '<td class="px-3 py-1.5 font-semibold text-slate-700 sticky left-0 bg-white whitespace-nowrap">'+x.agente+'</td>';
+      cols.forEach(function(j){
+        var c = x.dias[j]||'';
+        if (!c) {
+          html += '<td class="px-3 py-2 text-center bg-slate-50/60"></td>';
+        } else if (c==='VAC' || c==='Día C') {
+          html += '<td class="px-3 py-2 text-center"><span class="text-[11px] font-semibold px-2.5 py-1 rounded-full border whitespace-nowrap '+cronoColor(c)+'">'+c+'</span></td>';
+        } else {
+          html += '<td class="px-3 py-2 text-center"><select onchange="cronoCambiar('+i+','+j+',this.value)" class="text-xs font-semibold px-3 py-1.5 rounded-full border cursor-pointer '+cronoColor(c)+'">' +
+            '<option value="Phone"'+(c==='Phone'?' selected':'')+'>Phone</option>' +
+            '<option value="Chat"'+(c==='Chat'?' selected':'')+'>Chat</option>' +
+            '<option value="PP"'+(c==='PP'?' selected':'')+'>PP</option>' +
+            '<option value="VAC"'+(c==='VAC'?' selected':'')+'>VAC</option>' +
+            '<option value="Día C"'+(c==='Día C'?' selected':'')+'>Día C</option>' +
+            '<option value="">—</option></select></td>';
+        }
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+  });
+  html += '<div class="text-xs text-slate-400 mt-2">💡 Solo días hábiles (lun–vie). Haz clic en un canal para cambiarlo. Los cambios se guardan en el navegador.</div>';
+  w.innerHTML = html;
+}
+function cronoCambiar(i, j, val){
+  if (i>=0 && i<CRONO.length && j>=0 && j<CRONO[i].dias.length) CRONO[i].dias[j] = val;
+  persistirCrono();
+  renderCronograma();
+}
+
+/* ---------- Init ---------- */
+try {
+  diasAlmuerzo = parseAlmuerzos();
+  diaActual = new Date();
+  while (diaActual.getDay() === 0 || diaActual.getDay() === 6) {
+    diaActual = new Date(diaActual.getFullYear(), diaActual.getMonth(), diaActual.getDate()-1);
+  }
+  renderAlmuerzos();
+  cargarSiempre();
+  renderFiltroFechas();
+  renderFiltroCanales();
+  renderNovedades();
+  cargarVacGuardado();
+  renderVacaciones();
+  poblarFiltroMes();
+  cargarFestGuardado();
+  festMes = { y:2026, m:8 };
+  $('filtroMesFest').value = '2026-08';
+  renderFestivos();
+  cargarFormGuardado();
+  renderFormacion();
+  cargarCronoGuardado();
+  renderCronograma();
+} catch (e) {
+  document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;bottom:10px;right:10px;background:#fee2e2;color:#991b1b;padding:10px 14px;border-radius:10px;font-size:12px;z-index:9999;max-width:90%"><b>Error:</b> ' + e.message + '</div>');
+}
+</script>
+</body>
+</html>
