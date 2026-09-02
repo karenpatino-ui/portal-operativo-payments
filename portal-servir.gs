@@ -3,18 +3,18 @@
    =====================================================================
    Este script hace DOS cosas en la misma dirección (/exec):
 
-     A) SIRVE la página del portal: lee "portal-dashboard.html" y
-        "portal-datos.js" desde tu Google Drive, los combina e inyecta tu
-        sesión de Alegra. Así todos entran con una sola URL y sin bloqueos.
+     A) SIRVE la página del portal: lee dashboard.html y datos.js desde
+        GitHub (repo público karenpatino-ui/portal-operativo-payments),
+        los combina e inyecta tu sesión de Alegra. Así todos entran con
+        una sola URL y sin bloqueos.
 
      B) API de datos: la página guarda/lee en la hoja de calculo (pestaña
         "datos"), en la misma dirección → sincronización compartida.
 
    CONFIGURACIÓN:
-     1. Sube a Drive (drive.google.com → Nuevo → Subir archivo) los 2
-        archivos de la carpeta del proyecto:
-          - dashboard.html  → cámbiale el nombre a  portal-dashboard.html
-          - datos.js        → cámbiale el nombre a  portal-datos.js
+     1. Los archivos viven en GitHub:
+          https://github.com/karenpatino-ui/portal-operativo-payments
+        Para editar: editar directamente en GitHub (o clonar y hacer push).
      2. Pega este código en Code.gs de tu proyecto de Apps Script.
      3. Implementar → Administrar implementaciones → editar la Web app →
         "Versión: Nueva versión" → Implementar (conserva la misma URL).
@@ -23,6 +23,8 @@
 
 var HOJA_ID = '1Ar_iJnO7SznuoJz-1y3VB91vI6QHt7lfNVtDof-To9w';
 
+var GITHUB_REPO = 'karenpatino-ui/portal-operativo-payments';
+var GITHUB_BRANCH = 'main';
 var PORTAL_HTML_NOMBRES  = ['portal-dashboard.html', 'dashboard.html'];
 var PORTAL_DATOS_NOMBRES = ['portal-datos.js', 'datos.js'];
 
@@ -103,21 +105,14 @@ function servirPortal() {
 }
 
 function textoDe(nombres) {
-  var elMejor = null, elFecha = -1;
   for (var j = 0; j < nombres.length; j++) {
-    var it = DriveApp.getFilesByName(nombres[j]);
-    while (it.hasNext()) {
-      var f = it.next();
-      try {
-        var ts = f.getLastUpdated().getTime();
-        if (ts > elFecha) { elFecha = ts; elMejor = f; }
-      } catch (e3) {
-        if (!elMejor) elMejor = f;
-      }
-    }
+    var url = 'https://raw.githubusercontent.com/' + GITHUB_REPO + '/' + GITHUB_BRANCH + '/' + nombres[j];
+    try {
+      var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      if (resp.getResponseCode() === 200) return resp.getContentText();
+    } catch (e) {}
   }
-  if (elMejor) return elMejor.getBlob().getDataAsString();
-  throw new Error('No encuentro en tu Drive ninguno de: ' + nombres.join(' o ') + '. Súbelos desde la carpeta del proyecto.');
+  throw new Error('No encuentro en GitHub ninguno de: ' + nombres.join(' o ') + '. Verifica que existan en el repositorio.');
 }
 
 /* ---------- Utilidades ---------- */
